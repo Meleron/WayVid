@@ -33,7 +33,7 @@ namespace WayVid.Controllers
             return "Fail!";
         }
 
-        [HttpPost]
+        [HttpPost("Login")]
         public async Task<string> Login(SignInModel signInModel)
         {
             if ((await identityService.SignInAsync(signInModel)) == true)
