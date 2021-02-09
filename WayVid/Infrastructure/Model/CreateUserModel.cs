@@ -4,20 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WayVid.Infrastructure.Enum;
 
 namespace WayVid.Database.Model
 {
-    public class SignInModel
+    public class CreateUserModel
     {
-        [Required]
-        [StringLength(15, MinimumLength = 4)]
         public string UserName { get; set; }
-        
-        [Required]
-        [StringLength(25, MinimumLength = 4)]
         public string Password { get; set; }
-
-        [Required]
-        public bool RememberMe { get; set; }
+        public string RepeatedPassword { get; set; }
+        public RoleType UserRole { get; set; }
     }
 }

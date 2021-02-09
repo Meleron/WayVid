@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WayVid.Database.Entity;
 using WayVid.Database.Model;
-using WayVid.Enum;
+using WayVid.Infrastructure.Enum;
 using WayVid.Service;
 
 namespace WayVid.Controllers
@@ -39,7 +39,7 @@ namespace WayVid.Controllers
         public async Task<IActionResult> Login(SignInModel signInModel)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState.Values.Where(v => v.Errors.Count > 0).ToList());
             if ((await identityService.SignInAsync(signInModel)) == true)
                 return Content("Success!");
             return Content("Fail!");

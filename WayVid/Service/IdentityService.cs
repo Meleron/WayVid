@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WayVid.Database.Entity;
 using WayVid.Database.Model;
-using WayVid.Enum;
-using WayVid.Extras;
+using WayVid.Infrastructure.Enum;
+using WayVid.Infrastructure.Extras;
 
 namespace WayVid.Service
 {
@@ -28,8 +28,6 @@ namespace WayVid.Service
 
         public async Task<bool> CreateUserAsync(CreateUserModel createModel)
         {
-            //if (createModel.UserRole == RoleType.Admin)
-            //    throw new Exception("IdentityService.Register: Wrong role type!");
             User newUser = new User { UserName = createModel.UserName };
             IdentityResult identityRes = await userManager.CreateAsync(newUser, createModel.Password);
             if (identityRes.Succeeded)
@@ -50,7 +48,5 @@ namespace WayVid.Service
             throw new StatusCodeException(HttpStatusCode.Unauthorized, "Invalid login attempt");
             //return false;
         }
-
-
     }
 }

@@ -4,21 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WayVid.Enum;
 
 namespace WayVid.Database.Model
 {
-    public class CreateUserModel
+    public class SignInModel
     {
-        [Required]
-        [StringLength(10, MinimumLength = 4)]
         public string UserName { get; set; }
-
-        [Required]
-        [StringLength(25, MinimumLength = 4)]
         public string Password { get; set; }
-
-        [Required]
-        public RoleType UserRole { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

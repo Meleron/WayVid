@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WayVid.Enum
+namespace WayVid.Infrastructure.Enum
 {
     [Flags]
     public enum RoleType

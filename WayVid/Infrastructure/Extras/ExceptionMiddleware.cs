@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WayVid.Extras
+namespace WayVid.Infrastructure.Extras
 {
     public class ExceptionMiddleware
     {
@@ -31,7 +31,7 @@ namespace WayVid.Extras
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }

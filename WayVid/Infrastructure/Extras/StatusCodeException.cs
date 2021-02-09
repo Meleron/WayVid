@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WayVid.Extras
+namespace WayVid.Infrastructure.Extras
 {
     public class StatusCodeException : Exception
     {
