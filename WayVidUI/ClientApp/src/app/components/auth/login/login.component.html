@@ -1,0 +1,11 @@
+<div class="authDiv">
+    <p style="font-size: 3em;">
+        WayVid Login
+    </p>
+
+  <form [formGroup]="loginForm">
+    <input class = 'authInput' placeholder="Username" formControlName="username" />
+    <input class = 'authInput' placeholder="Password" type="password" formControlName="password" />
+    <input class = 'authInput authButton' type="button" value="Login" (click)="onLogin()" />
+  </form>
+</div>
