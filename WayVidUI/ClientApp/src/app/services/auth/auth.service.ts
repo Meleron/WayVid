@@ -1,6 +1,7 @@
 import {Injectable, Injector} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {SignInModel} from '../../models/auth/sign-in-model';
+import {SignUpModel} from '../../models/auth/sign-up-model';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -18,6 +19,15 @@ export class AuthService {
 
   public login(loginModel: SignInModel): Observable<any> {
     return this.http.post(`${this.apiUrl}/identity/login`, loginModel);
+  }
+
+  public signUp(signUpModel: SignUpModel): Observable<any> {
+    return this.http.post(`${this.apiUrl}/identity/register`, signUpModel);
+  }
+
+  public test(): Observable<any>{
+    console.log('qweqweqwe');
+    return this.http.get(`${this.apiUrl}/identity/WithAuth`);
   }
 
 }

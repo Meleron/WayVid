@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onLogin() {
-    if (!this.loginForm.invalid) {
+    if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe(response => {
           this.toastr.success('Logged as', 'Success');
           console.log(response);
@@ -42,5 +42,11 @@ export class LoginComponent implements OnInit {
           console.log(error);
         });
     }
+  }
+
+  public test(){
+    this.authService.test().subscribe(resp =>{
+      console.log('tested');
+    });
   }
 }

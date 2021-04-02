@@ -11,13 +11,15 @@ import {NotFoundComponent} from './components/common/not-found/not-found.compone
 import {VisitorModule} from './components/visitor/visitor.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule, ToastrService} from 'ngx-toastr';
+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FetchDataComponent,
     LoginComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -29,6 +31,7 @@ import {ToastrModule, ToastrService} from 'ngx-toastr';
     RouterModule.forRoot([
       {path: '', component: LoginComponent, pathMatch: 'full'},
       {path: 'login', component: LoginComponent, pathMatch: 'full'},
+      {path: 'signup', component: SignUpComponent, pathMatch: 'full'},
       {path: '**', component: NotFoundComponent}
     ]),
     ReactiveFormsModule
