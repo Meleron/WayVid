@@ -9,6 +9,8 @@ using WayVid.Database.Entity;
 using WayVid.Database.Model;
 using WayVid.Infrastructure.Enum;
 using WayVid.Infrastructure.Extras;
+using WayVid.Infrastructure.Interfaces.Service;
+using WayVid.Infrastructure.Model;
 
 namespace WayVid.Service
 {
@@ -18,23 +20,39 @@ namespace WayVid.Service
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly RoleManager<Role> roleManager;
+        private readonly IVisitorService visitorService;
 
-        public IdentityService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+        public IdentityService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IVisitorService visitorService)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.signInManager = signInManager;
+            this.visitorService = visitorService;
         }
 
-        public async Task<bool> CreateUserAsync(CreateUserModel createModel)
+        public async Task<VisitorModel> CreateUserAsync(CreateUserModel createModel)
         {
             User newUser = new User { UserName = createModel.UserName };
+            if (createModel.UserRole != RoleType.Visitor)
+                throw new NotImplementedException("Only visitor account creation is available for now.");
             IdentityResult identityRes = await userManager.CreateAsync(newUser, createModel.Password);
             if (identityRes.Succeeded)
             {
                 await userManager.AddToRoleAsync(newUser, createModel.UserRole.ToString());
+                switch (createModel.UserRole)
+                {
+                    case RoleType.Visitor:
+                        {
+                            VisitorModel visitor = await visitorService.InsertAsync(new VisitorModel { UserID = newUser.Id });
+                            newUser.VisitorID = visitor.ID;
+                            await userManager.UpdateAsync(newUser);
+                            break;
+                        }
+                }
+
                 await signInManager.SignInAsync(newUser, false);
-                return true;
+
+                return null;
             }
             throw new StatusCodeException(HttpStatusCode.Conflict, identityRes.Errors.ToList().First().Description);
             //return false;
