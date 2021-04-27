@@ -1,52 +1,66 @@
-import {Component, OnInit} from '@angular/core';
-import {TestService} from 'src/app/services/test/test.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../../services/auth/auth.service';
-import {ToastrService} from 'ngx-toastr';
+import { Component, OnInit } from "@angular/core";
+import { TestService } from "src/app/services/test/test.service";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { AuthService } from "../../../services/auth/auth.service";
+import { ToastrService } from "ngx-toastr";
+import { OAuthService } from "angular-oauth2-oidc";
+import { RoleType } from "src/app/enums/role-types";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.css"],
 })
 export class LoginComponent implements OnInit {
+  loginForm = this.fb.group({
+    username: [
+      "",
+      [Validators.required, Validators.minLength(4), Validators.maxLength(25)],
+    ],
+    password: [
+      "",
+      [Validators.required, Validators.minLength(8), Validators.maxLength(25)],
+    ],
+    rememberMe: [true],
+  });
 
-  loginForm = this.fb.group(
-    {
-      username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(25)]],
-      rememberMe: [true]
-    }
-  );
-
-  constructor(private authService: AuthService, private fb: FormBuilder, private toastr: ToastrService) {
+  constructor(
+    private authService: AuthService,
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private ssoService: OAuthService,
+    private router: Router
+  ) {
     this.authService = authService;
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   public onLogin() {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe(response => {
-          this.toastr.success('Logged as', 'Success');
-          console.log(response);
-        },
-        error => {
-          if (error.status === 401) {
-            this.toastr.error('Invalid login attempt', 'Error');
-          } else {
-            this.toastr.error('For more information, go to the console', 'Error');
-          }
-          console.log(error);
-        });
+      this.authService.login(this.loginForm.value).subscribe((response) => {
+        if (response.success) {
+          console.log(this.authService.getUserId());
+          console.log(this.authService.getUserRole());
+          console.log(this.authService.getUsername());
+          this.toastr.success(response.message, "Success");
+          this.router.navigate(['/visitor']);
+        } else {
+          this.toastr.error(response.errorMessage, "Error");
+        }
+      });
     }
   }
 
-  public test(){
-    this.authService.test().subscribe(resp =>{
-      console.log('tested');
+  public test() {
+    this.authService.test().subscribe((resp) => {
+      console.log(resp);
     });
   }
 }
