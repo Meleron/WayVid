@@ -1,4 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
+import { ConfigService } from '../appconfig.service';
 import { HttpRequestService } from '../http-request.service';
 
 @Injectable({
@@ -6,7 +7,7 @@ import { HttpRequestService } from '../http-request.service';
 })
 export class TestService extends HttpRequestService<string> {
 
-  constructor(protected injector: Injector) {
-    super(injector);
+  constructor(protected injector: Injector, configService: ConfigService) {
+    super(injector, configService);
   }
 }
