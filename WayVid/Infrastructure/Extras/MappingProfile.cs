@@ -14,8 +14,8 @@ namespace WayVid.Infrastructure.Extras
     {
         public MappingProfile()
         {
-            CreateMap<VisitorModel, Visitor>().ForMember(d => d.User, option => option.Ignore());
-            CreateMap<Visitor, VisitorModel>().ForMember(d => d.UserName, option => option.MapFrom(s => s.User.UserName));
+            CreateMap<VisitorModel, Visitor>();//.ForMember(d => d.User, option => option.Ignore());
+            CreateMap<Visitor, VisitorModel>();
             CreateMap<User, UserModel>();
             CreateMap<UserModel, User>();
         }
