@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WayVid.Database.Entity;
+using WayVid.Infrastructure.Enum;
 
 namespace WayVid.Infrastructure.Interfaces.Entity
 {

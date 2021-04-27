@@ -24,6 +24,9 @@ using AutoMapper;
 using WayVid.Infrastructure.Interfaces.Service;
 using WayVid.Infrastructure.Interfaces.Core;
 using WayVid.Database.Repository;
+using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
+using AspNet.Security.OpenIdConnect.Primitives;
 
 namespace WayVid
 {
@@ -44,13 +47,105 @@ namespace WayVid
             services.AddCors(SetCors);
             services.AddControllers();
             services.AddSwaggerGen();
-            services.AddDbContext<ApiDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Local")));
+
+            services.AddDbContext<ApiDbContext>(opt =>
+            {
+                opt.UseSqlServer(Configuration.GetConnectionString("Local"));
+                opt.UseOpenIddict<Guid>();
+            });
             services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<ApiDbContext>();
+                .AddEntityFrameworkStores<ApiDbContext>()
+                .AddDefaultTokenProviders();
+
+
+            // ASP.NET Core Identity should use the same claim names as OpenIddict
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
+            });
+
+            services.AddOpenIddict()
+
+            // Register the OpenIddict core components.
+            .AddCore(options =>
+            {
+                // Configure OpenIddict to use the Entity Framework Core stores and models.
+                options.UseEntityFrameworkCore()
+                        .UseDbContext<ApiDbContext>()
+                        .ReplaceDefaultEntities<Guid>();
+            })
+
+            // Register the OpenIddict server components.
+            .AddServer(options =>
+            {
+                //options.UseMvc
+                // Enable the token endpoint (required to use the password flow).
+                options.SetTokenEndpointUris("/connect/token");
+                options.SetUserinfoEndpointUris("/connect/userinfo");
+
+                // Allow client applications to use the grant_type=password flow.
+                options.AllowPasswordFlow();
+                options.AllowRefreshTokenFlow();
+
+                // Mark the "email", "profile" and "roles" scopes as supported scopes.
+                //options.RegisterScopes(OpenIddictConstants.Scopes.Email,
+                //                       OpenIddictConstants.Scopes.Profile,
+                //                       OpenIddictConstants.Scopes.Roles);
+
+                // Accept requests sent by unknown clients (i.e that don't send a client_id).
+                // When this option is not used, a client registration must be
+                // created for each client using IOpenIddictApplicationManager.
+                options.AcceptAnonymousClients();
+
+                // Register the signing and encryption credentials.
+                options.AddDevelopmentEncryptionCertificate()
+                        .AddDevelopmentSigningCertificate();
+
+                // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                options.UseAspNetCore()
+                        .EnableAuthorizationEndpointPassthrough() // Add this line.
+                        .EnableTokenEndpointPassthrough()
+                        .DisableTransportSecurityRequirement(); // During development, you can disable the HTTPS requirement.
+            })
+
+            // Register the OpenIddict validation components.
+            .AddValidation(options =>
+            {
+                // Import the configuration from the local OpenIddict server instance.
+                options.UseLocalServer();
+
+                // Register the ASP.NET Core host.
+                options.UseAspNetCore();
+            });
+
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+                options.Events.OnRedirectToAccessDenied = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+            });
+
             //services.AddIdentityServer().AddApiAuthorization<User>();
             services.AddTransient<IdentityService>();
             services.AddTransient<RoleService>();
             services.AddTransient<IVisitorService, VisitorService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRepositoryGeneric<Visitor, ApiDbContext>, VisitorRepository>();
             services.Configure<IdentityOptions>(options =>
             {
@@ -114,16 +209,14 @@ namespace WayVid
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseSwagger();
-
             app.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = "swagger";
                 c.SwaggerEndpoint($"/{c.RoutePrefix}/v1/swagger.json", "My API V1");
             });
-
-            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 

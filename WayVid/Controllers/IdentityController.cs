@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNet.Security.OpenIdConnect.Primitives;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OpenIddict.Abstractions;
 using System.Threading.Tasks;
 using WayVid.Database.Entity;
 using WayVid.Database.Model;
@@ -28,22 +26,18 @@ namespace WayVid.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register(CreateUserModel registerModel)
         {
-            //if (!ModelState.IsValid)
-            //    return BadRequest();
-            //if ((await identityService.CreateUserAsync(registerModel)) == null)
-            //return Content("Fail!");
             await identityService.CreateUserAsync(registerModel);
             return Ok("");
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] SignInModel signInModel)
+        [Authorize, HttpGet("~/api/test")]
+        public IActionResult GetMessage()
         {
-            //if (!ModelState.IsValid)
-            //    return BadRequest(ModelState.Values.Where(v => v.Errors.Count > 0).ToList());
-            if ((await identityService.SignInAsync(signInModel)) == true)
-                return Ok();
-            return Redirect("");
+            return new JsonResult(new
+            {
+                Subject = User.GetClaim(OpenIdConnectConstants.Claims.Subject),
+                Name = User.Identity.Name
+            });
         }
 
         [HttpGet("NoAuth")]
@@ -53,10 +47,17 @@ namespace WayVid.Controllers
         }
 
         [HttpGet("WithAuth")]
-        [Authorize]
+        [Authorize(Roles = "Visitor")]
         public string WithAuth()
         {
-            return "Success with auth!";
+            return "Success visitor!";
+        }
+
+        [HttpGet("Owner")]
+        [Authorize(Roles = "Owner")]
+        public string Owner()
+        {
+            return "Success owner!";
         }
     }
 }
