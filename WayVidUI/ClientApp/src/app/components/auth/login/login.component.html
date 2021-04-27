@@ -1,20 +1,28 @@
 <div class="authDiv">
-    <p style="font-size: 3em;">
-        WayVid Login
-    </p>
+  <p style="font-size: 3em">WayVid Login</p>
 
   <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-    <input class = 'authInput' placeholder="Username" formControlName="username" />
-    <input class = 'authInput' placeholder="Password" type="password" formControlName="password" />
-    <input [disabled]="!loginForm.dirty" class = 'authInput authButton' type="submit" value="Login" />
+    <input
+      class="authInput"
+      placeholder="Username"
+      formControlName="username"
+    />
+    <input
+      class="authInput"
+      placeholder="Password"
+      type="password"
+      formControlName="password"
+    />
+    <input
+      [disabled]="!loginForm.dirty"
+      class="authInput authButton"
+      type="submit"
+      value="Login"
+    />
   </form>
   <div class="register-suggestion">
-    <p>
-      No account?
-    </p>
+    <p>No account?</p>
     <a href="signup">Register!</a>
   </div>
-  <button (click)="test()">
-    TEST
-  </button>
+  <button (click)="test()">TEST</button>
 </div>
