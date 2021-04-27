@@ -20,6 +20,10 @@ using WayVid.Database;
 using WayVid.Database.Entity;
 using WayVid.Infrastructure.Extras;
 using WayVid.Service;
+using AutoMapper;
+using WayVid.Infrastructure.Interfaces.Service;
+using WayVid.Infrastructure.Interfaces.Core;
+using WayVid.Database.Repository;
 
 namespace WayVid
 {
@@ -43,8 +47,11 @@ namespace WayVid
             services.AddDbContext<ApiDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Local")));
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApiDbContext>();
+            //services.AddIdentityServer().AddApiAuthorization<User>();
             services.AddTransient<IdentityService>();
             services.AddTransient<RoleService>();
+            services.AddTransient<IVisitorService, VisitorService>();
+            services.AddTransient<IRepositoryGeneric<Visitor, ApiDbContext>, VisitorRepository>();
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -53,6 +60,10 @@ namespace WayVid
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireUppercase = false;
+            });
+            services.AddAutoMapper((config) =>
+            {
+                config.AddProfile(new MappingProfile());
             });
         }
 
@@ -97,7 +108,7 @@ namespace WayVid
             SetCulture();
             InitializeRoles(app);
             ApplyMigrations(app);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -117,6 +128,9 @@ namespace WayVid
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("Default");
+
             app.UseAuthentication();
             app.UseAuthorization();
 

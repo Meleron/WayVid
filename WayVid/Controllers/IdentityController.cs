@@ -28,27 +28,28 @@ namespace WayVid.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register(CreateUserModel registerModel)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-            if ((await identityService.CreateUserAsync(registerModel)) == true)
-                return Content("Success!");
-            return Content("Fail!");
+            //if (!ModelState.IsValid)
+            //    return BadRequest();
+            //if ((await identityService.CreateUserAsync(registerModel)) == null)
+            //return Content("Fail!");
+            await identityService.CreateUserAsync(registerModel);
+            return Ok("");
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(SignInModel signInModel)
+        public async Task<IActionResult> Login([FromBody] SignInModel signInModel)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.Values.Where(v => v.Errors.Count > 0).ToList());
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState.Values.Where(v => v.Errors.Count > 0).ToList());
             if ((await identityService.SignInAsync(signInModel)) == true)
-                return Content("Success!");
-            return Content("Fail!");
+                return Ok();
+            return Redirect("");
         }
 
         [HttpGet("NoAuth")]
-        public async Task<string> NoAuth()
+        public async Task<ActionResult<SignInModel>> NoAuth()
         {
-            return "Success no auth!";
+            return new SignInModel { Password = "qwe", RememberMe = false, UserName = "asd" };
         }
 
         [HttpGet("WithAuth")]

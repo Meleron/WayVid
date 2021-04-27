@@ -1,15 +1,9 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {VisitorMainPageComponent} from './visitor-main-page/visitor-main-page.component';
-
-
+import { NgModule } from "@angular/core";
+import { VisitorDashboardComponent } from "./dashboard/visitor-dashboard.component";
+import { VisitorRoutingModule } from "./visitor-routing.module";
 
 @NgModule({
-  declarations: [
-    VisitorMainPageComponent
-  ],
-  imports: [
-    CommonModule
-  ]
+  declarations: [VisitorDashboardComponent],
+  imports: [VisitorRoutingModule],
 })
-export class VisitorModule { }
+export class VisitorModule {}

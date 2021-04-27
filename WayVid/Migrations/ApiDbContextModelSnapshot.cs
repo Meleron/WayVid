@@ -201,6 +201,9 @@ namespace WayVid.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<Guid?>("VisitorID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -211,7 +214,46 @@ namespace WayVid.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("VisitorID")
+                        .IsUnique()
+                        .HasFilter("[VisitorID] IS NOT NULL");
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("WayVid.Database.Entity.Visitor", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("UpdatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Visitor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -263,6 +305,20 @@ namespace WayVid.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WayVid.Database.Entity.User", b =>
+                {
+                    b.HasOne("WayVid.Database.Entity.Visitor", "Visitor")
+                        .WithOne("User")
+                        .HasForeignKey("WayVid.Database.Entity.User", "VisitorID");
+
+                    b.Navigation("Visitor");
+                });
+
+            modelBuilder.Entity("WayVid.Database.Entity.Visitor", b =>
+                {
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
