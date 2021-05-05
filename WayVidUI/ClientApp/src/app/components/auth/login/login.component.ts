@@ -46,11 +46,8 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe((response) => {
         if (response.success) {
-          console.log(this.authService.getUserId());
-          console.log(this.authService.getUserRole());
-          console.log(this.authService.getUsername());
-          this.toastr.success(response.message, "Success");
-          this.router.navigate(['/visitor']);
+          this.toastr.success("Login succeeded", "Success");
+          this.router.navigateByUrl("/visitor");
         } else {
           this.toastr.error(response.errorMessage, "Error");
         }
@@ -59,8 +56,11 @@ export class LoginComponent implements OnInit {
   }
 
   public test() {
-    this.authService.test().subscribe((resp) => {
-      console.log(resp);
+    this.authService.isLoggedIn.subscribe((isLoggedInResp) => {
+      console.log(`Login status: ${isLoggedInResp}`);
+      console.log(`UserName: ${this.authService.getUsername()}`);
+      console.log(`Role: ${this.authService.getUserRole()}`);
+      console.log(`AccessToken: ${this.ssoService.getAccessToken()}`);
     });
   }
 }

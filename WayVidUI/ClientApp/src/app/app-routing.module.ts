@@ -3,12 +3,23 @@ import { RouterModule, Routes } from "@angular/router";
 import { LoginComponent } from "./components/auth/login/login.component";
 import { SignUpComponent } from "./components/auth/sign-up/sign-up.component";
 import { NotFoundComponent } from "./components/common/not-found/not-found.component";
+import { LayoutComponent } from "./components/layout/layout.component";
+import { AuthGuard } from "./guards/auth-guard";
 import { RouteGuard } from "./guards/route-guard";
 import { VisitorGuard } from "./guards/visitor-guard";
 
 const routes: Routes = [
-  { path: "", component: LoginComponent, pathMatch: "full" },
-  { path: "login", component: LoginComponent, pathMatch: "full" },
+  {
+    path: "",
+    redirectTo: "/login",
+    pathMatch: "full",
+  },
+  {
+    path: "login",
+    canActivate: [AuthGuard],
+    component: LoginComponent,
+    pathMatch: "full",
+  },
   { path: "signup", component: SignUpComponent, pathMatch: "full" },
   {
     path: "owner",
@@ -19,6 +30,7 @@ const routes: Routes = [
   {
     path: "visitor",
     pathMatch: "full",
+    component: LayoutComponent,
     canActivate: [RouteGuard, VisitorGuard],
     canLoad: [RouteGuard, VisitorGuard],
     loadChildren: () =>

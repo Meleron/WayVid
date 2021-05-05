@@ -7,6 +7,6 @@
   <input class = 'authInput' placeholder="Username" formControlName="username" />
   <input class = 'authInput' placeholder="Password" type="password" formControlName="password" />
   <input class = 'authInput' [class.ng-invalid]="signUpForm.controls.password.value !== signUpForm.controls.repeatedPassword.value" placeholder="Repeat Your Password" type="password" formControlName="repeatedPassword" />
-  <input [disabled]="!signUpForm.dirty" class = 'authInput authButton' type="submit" value="Sign Up" />
+  <input [disabled]="!signUpForm.valid" class = 'authInput authButton' type="submit" value="Sign Up" />
 </form>
 </div>

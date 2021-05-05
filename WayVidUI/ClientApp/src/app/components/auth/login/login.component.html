@@ -14,7 +14,7 @@
       formControlName="password"
     />
     <input
-      [disabled]="!loginForm.dirty"
+      [disabled]="!loginForm.valid"
       class="authInput authButton"
       type="submit"
       value="Login"
@@ -22,7 +22,7 @@
   </form>
   <div class="register-suggestion">
     <p>No account?</p>
-    <a href="signup">Register!</a>
+    <a routerLink="/signup">Register!</a>
   </div>
   <button (click)="test()">TEST</button>
 </div>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -26,6 +27,18 @@ namespace WayVidUI
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            services.AddCors(SetCors);
+        }
+
+        public void SetCors(CorsOptions corsOptions)
+        {
+            corsOptions.AddPolicy("default", conf =>
+            {
+                //conf.WithOrigins("http://localhost:4200/");
+                conf.AllowAnyOrigin();
+                conf.AllowAnyHeader();
+                conf.AllowAnyMethod();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +64,8 @@ namespace WayVidUI
 
             app.UseRouting();
 
+            app.UseCors("default");
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -65,7 +80,8 @@ namespace WayVidUI
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    //spa.UseAngularCliServer(npmScript: "start");
                 }
             });
         }
