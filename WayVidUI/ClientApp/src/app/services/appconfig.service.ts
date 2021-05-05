@@ -6,12 +6,12 @@ import { ConfigModel } from "../models/client/config-model";
 
 @Injectable()
 export class ConfigService {
-  private controller = "/config";
+  private controller = "https://0.0.0.0:5001/config";
 
   constructor(private httpClient: HttpClient) {}
 
-  public loadConfig(): Observable<ConfigModel> {
-    if (!this.config)
+  public loadConfig(forcedUpdate: boolean = false): Observable<ConfigModel> {
+    if (!this.config || forcedUpdate)
       return this.httpClient.get<ConfigModel>(this.controller).pipe(
         map((resp) => {
           this.config = resp;

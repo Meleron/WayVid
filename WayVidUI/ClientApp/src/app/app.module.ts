@@ -14,6 +14,7 @@ import { SignUpComponent } from "./components/auth/sign-up/sign-up.component";
 import { OAuthModule } from "angular-oauth2-oidc";
 import { ConfigService } from "./services/appconfig.service";
 import { AppRoutingModule } from "./app-routing.module";
+import { LayoutComponent } from './components/layout/layout.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AppRoutingModule } from "./app-routing.module";
     LoginComponent,
     NotFoundComponent,
     SignUpComponent,
+    LayoutComponent,
   ],
   imports: [
     AppRoutingModule,

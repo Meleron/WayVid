@@ -8,26 +8,26 @@ import { flatMap, map } from "rxjs/operators";
   providedIn: "root",
 })
 export abstract class HttpRequestService<TModel> {
-  // private readonly apiUrl: string;
   private http: HttpClient;
 
-  protected constructor(protected injector: Injector, private configService: ConfigService) {
-    // this.apiUrl = "https://0.0.0.0:5011";
+  protected constructor(
+    protected injector: Injector,
+    private configService: ConfigService
+  ) {
     this.http = injector.get(HttpClient);
   }
 
   public getRequest(route: string): Observable<TModel> {
     return this.configService.loadConfig().pipe(
-      flatMap(data =>{
+      flatMap((data) => {
         return this.http.get<TModel>(`${data.apiURL}/${route}`);
       })
     );
-    // return this.http.get<TModel>(`${this.apiUrl}/${route}`);
   }
 
   public postRequest(route: string, model: TModel): Observable<TModel> {
     return this.configService.loadConfig().pipe(
-      flatMap(data =>{
+      flatMap((data) => {
         return this.http.get<TModel>(`${data.apiURL}/${route}`, model);
       })
     );

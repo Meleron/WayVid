@@ -23,7 +23,7 @@ code {
   height: 100%;
 }
 
-html{
+html {
   height: 100%;
 }
 
@@ -31,7 +31,7 @@ body {
   height: 100%;
 }
 
-form{
+form {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -39,7 +39,7 @@ form{
   width: 100%;
 }
 
-.ng-invalid.ng-touched:not(form)  {
+.ng-invalid.ng-touched:not(form) {
   border: 1px solid red;
   border-radius: 2px;
 }
