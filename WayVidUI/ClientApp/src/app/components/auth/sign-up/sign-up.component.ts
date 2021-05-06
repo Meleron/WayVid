@@ -39,7 +39,7 @@ export class SignUpComponent implements OnInit {
       this.authService.signUp(this.signUpForm.value).subscribe(
         (response) => {
           let signInModel: SignInModel = new SignInModel();
-          signInModel.username = this.signUpForm.controls.userName.value;
+          signInModel.username = this.signUpForm.controls.username.value;
           signInModel.password = this.signUpForm.controls.password.value;
           signInModel.rememberMe = true;
           this.toastr.success("Registration complete", "Success");

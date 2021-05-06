@@ -55,6 +55,8 @@ export class AuthService {
       switchMap((resp) => {
         return this.getPrimaryUserInfo().pipe(
           map((userInfo) => {
+            console.log(`Received UserInfo:`);
+            console.log(userInfo);
             response.success = true;
             this.setUserInfo(userInfo);
             this.loggedInSubject.next(this.ssoService.hasValidAccessToken());
@@ -92,8 +94,8 @@ export class AuthService {
     return localStorage.getItem("id");
   }
 
-  public getUserRole(): number {
-    return +localStorage.getItem("role");
+  public getUserRoles(): number[] {
+    return JSON.parse(localStorage.getItem("roles"));
   }
 
   public getUsername(): string {
@@ -101,7 +103,8 @@ export class AuthService {
   }
 
   public isInRole(role: RoleType): boolean {
-    return this.getUserRole() === role;
+    const userRoles = this.getUserRoles();
+    return userRoles ? userRoles.includes(+role) : false;
   }
 
   public test(): Observable<any> {
@@ -110,15 +113,15 @@ export class AuthService {
 
   public clearAuthLocalStorage() {
     localStorage.removeItem("id");
-    localStorage.removeItem("role");
+    localStorage.removeItem("roles");
     localStorage.removeItem("userName");
   }
 
   private setUserInfo(response: UserModel) {
     localStorage.setItem("id", response.id ? response.id : null);
     localStorage.setItem(
-      "role",
-      response.role ? response.role.toString() : null
+      "roles",
+      response.roleList ? JSON.stringify(response.roleList) : null
     );
     localStorage.setItem(
       "userName",
@@ -127,7 +130,7 @@ export class AuthService {
   }
 
   public navigateToUserPage() {
-    switch (this.getUserRole()) {
+    switch (this.getUserRoles()[0]) {
       case RoleType.Visitor: {
         this.router.navigateByUrl("/visitor");
         break;

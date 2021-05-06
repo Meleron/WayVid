@@ -7,14 +7,15 @@ import { flatMap, map } from "rxjs/operators";
 @Injectable({
   providedIn: "root",
 })
-export abstract class HttpRequestService<TModel> {
-  private http: HttpClient;
+export abstract class BaseHttpService<TModel> {
+  protected http: HttpClient;
+  protected configService: ConfigService;
 
   protected constructor(
     protected injector: Injector,
-    private configService: ConfigService
   ) {
     this.http = injector.get(HttpClient);
+    this.configService = injector.get(ConfigService);
   }
 
   public getRequest(route: string): Observable<TModel> {

@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
     this.authService.isLoggedIn.subscribe((isLoggedInResp) => {
       console.log(`Login status: ${isLoggedInResp}`);
       console.log(`UserName: ${this.authService.getUsername()}`);
-      console.log(`Role: ${this.authService.getUserRole()}`);
+      console.log(`Role: ${JSON.stringify(this.authService.getUserRoles())}`);
       console.log(`AccessToken: ${this.ssoService.getAccessToken()}`);
     });
   }

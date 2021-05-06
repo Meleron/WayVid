@@ -20,7 +20,6 @@ export class AppComponent {
 
     // setting up ssoService, filling localStorage
     configService.loadConfig(true).subscribe((resp) => {
-
       // setting received config values to localStorage
       localStorage.setItem("apiUrl", resp.apiURL);
 

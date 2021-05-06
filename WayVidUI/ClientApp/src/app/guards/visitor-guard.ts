@@ -11,9 +11,9 @@ export class VisitorGuard implements CanLoad, CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canLoad(): boolean {
-    if (this.authService.getUserRole() == RoleType.Visitor) return true;
+    if (this.authService.isInRole(RoleType.Visitor)) return true;
 
-    // if the user is not logged in, navigate it to the login page
+    // if the user is not a visitor, navigate it to the login page
     this.router.navigateByUrl("/");
     return false;
   }

@@ -5,5 +5,5 @@ import { VisitorModel } from "./visitor-model";
 export class UserModel extends Person {
   public visitorId?: string;
   public visitor?: VisitorModel;
-  public role: RoleType;
+  public roleList: RoleType[];
 }

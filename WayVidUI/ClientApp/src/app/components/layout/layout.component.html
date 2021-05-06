@@ -1,6 +1,9 @@
 <div class="layout">
   <nav>
     <button (click)="logOut()">Log Out</button>
+    <button (click)="onOwnerRoleRequest()">Become owner!</button>
+    <button *ngIf = "isOwnerNavPossible()" (click)="goToOwnerDashboard()">Go to owner</button>
+    <button *ngIf = "isVisitorNavPossible()" (click)="goToVisitorDashboard()">Go to visitor</button>
   </nav>
   <div class="content-container">
     <router-outlet></router-outlet>
