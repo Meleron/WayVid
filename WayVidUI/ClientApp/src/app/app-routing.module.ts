@@ -5,6 +5,7 @@ import { SignUpComponent } from "./components/auth/sign-up/sign-up.component";
 import { NotFoundComponent } from "./components/common/not-found/not-found.component";
 import { LayoutComponent } from "./components/layout/layout.component";
 import { AuthGuard } from "./guards/auth-guard";
+import { OwnerGuard } from "./guards/owner-guard";
 import { RouteGuard } from "./guards/route-guard";
 import { VisitorGuard } from "./guards/visitor-guard";
 
@@ -24,6 +25,9 @@ const routes: Routes = [
   {
     path: "owner",
     pathMatch: "full",
+    component: LayoutComponent,
+    canActivate: [RouteGuard, OwnerGuard],
+    canLoad: [RouteGuard, OwnerGuard],
     loadChildren: () =>
       import("./components/owner/owner.module").then((m) => m.OwnerModule),
   },
