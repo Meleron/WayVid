@@ -26,8 +26,8 @@ namespace WayVid.Service
 
         public async Task<VisitorModel> GetAsync(Guid ID, bool includeDependencies = false)
         {
-            Visitor model = await repository.GetAsync(ID);
-            return mapper.Map<VisitorModel>(model);
+            Visitor entity = await repository.GetAsync(ID);
+            return mapper.Map<VisitorModel>(entity);
         }
 
         public async Task<VisitorModel> InsertAsync(VisitorModel model)

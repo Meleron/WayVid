@@ -27,7 +27,7 @@ namespace WayVid.Infrastructure.Extras
             {
                 context.Response.StatusCode = (int)ex.StatusCode;
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }

@@ -47,6 +47,7 @@ namespace WayVid
             services.AddCors(SetCors);
             services.AddControllers();
             services.AddSwaggerGen();
+            services.AddHttpContextAccessor();
 
             services.AddDbContext<ApiDbContext>(opt =>
             {
@@ -57,7 +58,7 @@ namespace WayVid
                 .AddEntityFrameworkStores<ApiDbContext>()
                 .AddDefaultTokenProviders();
 
-
+            #region configure auth
             // ASP.NET Core Identity should use the same claim names as OpenIddict
             services.Configure<IdentityOptions>(options =>
             {
@@ -140,13 +141,20 @@ namespace WayVid
                     return Task.CompletedTask;
                 };
             });
+            #endregion
 
+            #region configure DI
             //services.AddIdentityServer().AddApiAuthorization<User>();
             services.AddTransient<IdentityService>();
             services.AddTransient<RoleService>();
             services.AddTransient<IVisitorService, VisitorService>();
+            services.AddTransient<IEstablishmentService, EstablishmentService>();
+            services.AddTransient<IOwnerEstablishmentService, OwnerEstablishmentService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IRepositoryGeneric<User, ApiDbContext>, UserRepository>();
             services.AddTransient<IRepositoryGeneric<Visitor, ApiDbContext>, VisitorRepository>();
+            services.AddTransient<IRepositoryGeneric<Establishment, ApiDbContext>, EstablishmentRepository>();
+            services.AddTransient<IRepositoryGeneric<OwnerEstablishment, ApiDbContext>, RepositoryGeneric<OwnerEstablishment, ApiDbContext>>();
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -160,6 +168,7 @@ namespace WayVid
             {
                 config.AddProfile(new MappingProfile());
             });
+            #endregion
         }
 
         private void SetCors(CorsOptions corsOptions)

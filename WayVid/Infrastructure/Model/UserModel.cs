@@ -12,9 +12,11 @@ namespace WayVid.Infrastructure.Model
     public class UserModel : IUser
     {
         public Guid Id { get; set; }
-        public RoleType Role { get; set; }
+        public List<RoleType> RoleList { get; set; }
         public Guid? VisitorID { get; set; }
-        public Visitor Visitor { get; set; }
+        public VisitorModel Visitor { get; set; }
+        public Guid? OwnerID { get; set; }
+        public OwnerModel Owner { get; set; }
         public string UserName { get; set; }
     }
 }

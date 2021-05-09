@@ -40,5 +40,11 @@ namespace WayVid.Controllers
             }
             return BadRequest("User not found");
         }
+
+        [HttpGet("DeleteAllUser")]
+        public async Task DeleteAllUser()
+        {
+            await userService.DeleteAllUsersAsync();
+        }
     }
 }
