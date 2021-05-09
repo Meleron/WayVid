@@ -8,8 +8,7 @@ using WayVid.Infrastructure.Interfaces.Core;
 
 namespace WayVid.Infrastructure.Interfaces.Entity
 {
-    public interface IVisitor: IPerson
+    public interface IVisitor: IPerson, IEntity
     {
-        public Guid UserID { get; set; }
     }
 }

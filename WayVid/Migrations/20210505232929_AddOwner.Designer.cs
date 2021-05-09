@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WayVid.Database;
 
 namespace WayVid.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210505232929_AddOwner")]
+    partial class AddOwner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,44 +323,6 @@ namespace WayVid.Migrations
                     b.ToTable("OpenIddictTokens");
                 });
 
-            modelBuilder.Entity("WayVid.Database.Entity.Establishment", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CreatedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("DeletedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("EstablishmentName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MenuUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("UpdatedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Establishment");
-                });
-
             modelBuilder.Entity("WayVid.Database.Entity.Owner", b =>
                 {
                     b.Property<Guid>("ID")
@@ -392,48 +356,6 @@ namespace WayVid.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Owner");
-                });
-
-            modelBuilder.Entity("WayVid.Database.Entity.OwnerEstablishment", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CreatedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("DeletedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("EstablishmentID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("OwnerID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("UpdatedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EstablishmentID");
-
-                    b.HasIndex("OwnerID");
-
-                    b.ToTable("OwnerEstablishment");
                 });
 
             modelBuilder.Entity("WayVid.Database.Entity.Role", b =>
@@ -654,25 +576,6 @@ namespace WayVid.Migrations
                     b.Navigation("Authorization");
                 });
 
-            modelBuilder.Entity("WayVid.Database.Entity.OwnerEstablishment", b =>
-                {
-                    b.HasOne("WayVid.Database.Entity.Establishment", "Establishment")
-                        .WithMany("OwnerEstablishmentList")
-                        .HasForeignKey("EstablishmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WayVid.Database.Entity.Owner", "Owner")
-                        .WithMany("OwnerEstablishmentList")
-                        .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Establishment");
-
-                    b.Navigation("Owner");
-                });
-
             modelBuilder.Entity("WayVid.Database.Entity.User", b =>
                 {
                     b.HasOne("WayVid.Database.Entity.Owner", "Owner")
@@ -700,15 +603,8 @@ namespace WayVid.Migrations
                     b.Navigation("Tokens");
                 });
 
-            modelBuilder.Entity("WayVid.Database.Entity.Establishment", b =>
-                {
-                    b.Navigation("OwnerEstablishmentList");
-                });
-
             modelBuilder.Entity("WayVid.Database.Entity.Owner", b =>
                 {
-                    b.Navigation("OwnerEstablishmentList");
-
                     b.Navigation("User");
                 });
 

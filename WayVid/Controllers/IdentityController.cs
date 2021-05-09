@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WayVid.Database.Entity;
 using WayVid.Database.Model;
@@ -17,17 +18,21 @@ namespace WayVid.Controllers
     {
 
         private readonly IdentityService identityService;
+        private readonly RoleManager<Role> roleManager;
+        private readonly UserManager<User> userManager;
 
-        public IdentityController(IdentityService identityService)
+        public IdentityController(IdentityService identityService, RoleManager<Role> roleManager, UserManager<User> userManager)
         {
             this.identityService = identityService;
+            this.roleManager = roleManager;
+            this.userManager = userManager;
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(CreateUserModel registerModel)
         {
             await identityService.CreateUserAsync(registerModel);
-            return Ok("");
+            return StatusCode(201);
         }
 
         [Authorize, HttpGet("~/api/test")]
@@ -59,5 +64,15 @@ namespace WayVid.Controllers
         {
             return "Success owner!";
         }
+
+        [HttpGet("Test")]
+        public async Task<bool> Test()
+        {
+            User user = await userManager.GetUserAsync(HttpContext.User);
+            IList<string> roles = await userManager.GetRolesAsync(user);
+            //HttpContext.User;
+            return true;
+        }
+
     }
 }

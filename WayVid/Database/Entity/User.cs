@@ -13,5 +13,7 @@ namespace WayVid.Database.Entity
     {
         public Guid? VisitorID { get; set; }
         public Visitor Visitor { get; set; }
+        public Guid? OwnerID { get; set; }
+        public Owner Owner { get; set; }
     }
 }

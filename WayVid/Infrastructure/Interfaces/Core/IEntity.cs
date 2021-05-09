@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace WayVid.Infrastructure.Interfaces.Core
 {
-    public interface IPerson
-    {
-        public Guid UserID { get; set; }
-    }
+    public interface IEntity : IEntityBase, ICreatable, IUpdateable
+    { }
 }

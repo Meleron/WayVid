@@ -18,6 +18,12 @@ namespace WayVid.Infrastructure.Extras
             CreateMap<Visitor, VisitorModel>();
             CreateMap<User, UserModel>();
             CreateMap<UserModel, User>();
+            CreateMap<Establishment, EstablishmentModel>();
+            CreateMap<EstablishmentModel, Establishment>();
+            CreateMap<Owner, OwnerModel>();
+            CreateMap<OwnerModel, Owner>();
+            CreateMap<OwnerEstablishment, OwnerEstablishmentModel>();
+            CreateMap<OwnerEstablishmentModel, OwnerEstablishment>();
         }
     }
 }
