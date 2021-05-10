@@ -22,7 +22,7 @@ namespace WayVid.Database.Repository
 
         public override async Task<User> GetAsync(Guid ID)
         {
-            User user = await context.UserList.Include(e => e.Owner).Include(e => e.Visitor).FirstOrDefaultAsync(e => e.Id == ID);
+            User user = await context.UserList.AsNoTracking().Include(e => e.Owner).Include(e => e.Visitor).FirstOrDefaultAsync(e => e.Id == ID);
             return user;
         }
     }

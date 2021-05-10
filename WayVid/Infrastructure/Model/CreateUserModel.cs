@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WayVid.Infrastructure.Enum;
+using WayVid.Infrastructure.Interfaces.Core;
 
 namespace WayVid.Database.Model
 {
-    public class CreateUserModel
+    public class CreateUserModel : IModel
     {
         public string UserName { get; set; }
         public string Password { get; set; }

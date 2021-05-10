@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using WayVid.Database.Entity;
 using WayVid.Infrastructure.Enum;
+using WayVid.Infrastructure.Interfaces.Core;
 using WayVid.Infrastructure.Interfaces.Entity;
 
 namespace WayVid.Infrastructure.Model
 {
-    public class UserModel : IUser
+    public class UserModel : IUser, IModel
     {
         public Guid Id { get; set; }
         public List<RoleType> RoleList { get; set; }

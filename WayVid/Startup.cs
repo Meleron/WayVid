@@ -45,7 +45,7 @@ namespace WayVid
             services.AddMvc()
                 .AddFluentValidation(opt => opt.RegisterValidatorsFromAssemblyContaining<Startup>());
             services.AddCors(SetCors);
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSwaggerGen();
             services.AddHttpContextAccessor();
 
@@ -147,13 +147,16 @@ namespace WayVid
             //services.AddIdentityServer().AddApiAuthorization<User>();
             services.AddTransient<IdentityService>();
             services.AddTransient<RoleService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IOwnerService, OwnerService>();
             services.AddTransient<IVisitorService, VisitorService>();
             services.AddTransient<IEstablishmentService, EstablishmentService>();
             services.AddTransient<IOwnerEstablishmentService, OwnerEstablishmentService>();
-            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRepositoryGeneric<User, ApiDbContext>, UserRepository>();
+            services.AddTransient<IRepositoryGeneric<Owner, ApiDbContext>, OwnerRepository>();
             services.AddTransient<IRepositoryGeneric<Visitor, ApiDbContext>, VisitorRepository>();
             services.AddTransient<IRepositoryGeneric<Establishment, ApiDbContext>, EstablishmentRepository>();
+            //services.AddTransient<IRepositoryGeneric<VisitLogItem, ApiDbContext>, VisitLogItemRepository>();
             services.AddTransient<IRepositoryGeneric<OwnerEstablishment, ApiDbContext>, RepositoryGeneric<OwnerEstablishment, ApiDbContext>>();
             services.Configure<IdentityOptions>(options =>
             {

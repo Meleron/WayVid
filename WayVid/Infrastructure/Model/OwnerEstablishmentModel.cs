@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WayVid.Infrastructure.Interfaces.Core;
 using WayVid.Infrastructure.Interfaces.Entity;
 
 namespace WayVid.Infrastructure.Model
 {
-    public class OwnerEstablishmentModel : IOwnerEstablishment
+    public class OwnerEstablishmentModel : IOwnerEstablishment, IModel
     {
         public Guid ID { get; set; }
         public Guid OwnerID { get; set; }

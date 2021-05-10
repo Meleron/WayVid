@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WayVid.Infrastructure.Interfaces.Core;
 using WayVid.Infrastructure.Interfaces.Entity;
 
 namespace WayVid.Infrastructure.Model
 {
-    public class EstablishmentModel : IEstablishment
+    public class EstablishmentModel : IEstablishment, IModel
     {
         public Guid ID { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,15 @@ namespace WayVid.Database
         public DbSet<Establishment> EstablishmentList { get; set; }
         public DbSet<OwnerEstablishment> OwnerEstablishmentList { get; set; }
 
+        public static readonly ILoggerFactory MyLoggerFactory =
+    LoggerFactory.Create(builder => { builder.AddConsole(); });
+
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLoggerFactory(MyLoggerFactory);
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

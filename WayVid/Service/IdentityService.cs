@@ -43,7 +43,7 @@ namespace WayVid.Service
                 {
                     case RoleType.Visitor:
                         {
-                            VisitorModel visitor = await visitorService.InsertAsync(new VisitorModel { UserID = newUser.Id });
+                            VisitorModel visitor = (await visitorService.InsertAsync(new VisitorModel { UserID = newUser.Id })).Model;
                             newUser.VisitorID = visitor.ID;
                             await userManager.UpdateAsync(newUser);
                             break;

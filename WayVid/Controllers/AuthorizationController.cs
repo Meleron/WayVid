@@ -46,11 +46,12 @@ namespace WayVid.Controllers
             {
                 return await ProceedRefreshTokenGrantTypeAsync(request);
             }
-            return BadRequest(new OpenIdConnectResponse
-            {
-                Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                ErrorDescription = "The specified grant type is not supported."
-            });
+            return BadRequest("The specified grant type is not supported.");
+            //return BadRequest(new OpenIdConnectResponse
+            //{
+            //    Error = OpenIdConnectConstants.Errors.InvalidGrant,
+            //    ErrorDescription = "The specified grant type is not supported."
+            //});
         }
 
         [HttpGet("~/connect/userinfo"), Produces("application/json")]
@@ -61,11 +62,7 @@ namespace WayVid.Controllers
             {
                 return Ok(mapper.Map<UserModel>(await userManager.GetUserAsync(authRes.Principal)));
             }
-            return BadRequest(new OpenIdConnectResponse
-            {
-                Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                ErrorDescription = "The specified grant type is not supported."
-            });
+            return BadRequest("The specified grant type is not supported.");
         }
 
         private async Task<IActionResult> ProceedPasswordGrantTypeAsync(OpenIddictRequest request)
@@ -73,20 +70,12 @@ namespace WayVid.Controllers
             User user = await userManager.FindByNameAsync(request.Username);
             if (user == null)
             {
-                return BadRequest(new OpenIdConnectResponse
-                {
-                    Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                    ErrorDescription = "Username or password do not match"
-                });
+                return BadRequest("Username or password do not match");
             }
 
             if (!await signInManager.CanSignInAsync(user))
             {
-                return BadRequest(new OpenIdConnectResponse
-                {
-                    Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                    ErrorDescription = "The user is no longer allowed to sign in."
-                });
+                return BadRequest("The user is no longer allowed to sign in.");
             }
 
             var identity = new ClaimsIdentity(

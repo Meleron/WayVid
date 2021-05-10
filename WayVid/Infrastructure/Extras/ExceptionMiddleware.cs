@@ -34,6 +34,8 @@ namespace WayVid.Infrastructure.Extras
             catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.ContentType = "text/plain";
+                await context.Response.WriteAsync(ex.Message);
             }
         }
     }

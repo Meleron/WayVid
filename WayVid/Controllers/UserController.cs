@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WayVid.Infrastructure.Extras;
 using WayVid.Infrastructure.Interfaces.Service;
 using WayVid.Infrastructure.Model;
 
@@ -26,7 +27,7 @@ namespace WayVid.Controllers
         {
             this.userService = userService;
         }
-        
+
         [HttpGet("GetUserInfoFromContext")]
         [Authorize]
         public async Task<IActionResult> GetUserInfoFromContext()
@@ -34,9 +35,9 @@ namespace WayVid.Controllers
             AuthenticateResult authRes = await HttpContext.AuthenticateAsync(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
             if (authRes.Succeeded)
             {
-                UserModel user = await userService.GetUserByPrincipalAsync(authRes.Principal);
-                if(user != null)
-                    return Ok(user);
+                ServiceCrudResponse<UserModel> resp = await userService.GetUserModelByPrincipalAsync(authRes.Principal);
+                if (resp.Success && resp.Model != null)
+                    return Ok(resp.Model);
             }
             return BadRequest("User not found");
         }

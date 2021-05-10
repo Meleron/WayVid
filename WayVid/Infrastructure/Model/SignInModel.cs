@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WayVid.Infrastructure.Interfaces.Core;
 
 namespace WayVid.Database.Model
 {
-    public class SignInModel
+    public class SignInModel : IModel
     {
         public string UserName { get; set; }
         public string Password { get; set; }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WayVid.Infrastructure.Extras;
 using WayVid.Infrastructure.Interfaces.Service;
 using WayVid.Infrastructure.Model;
 
@@ -27,11 +28,10 @@ namespace WayVid.Controllers
         [Authorize(Roles = "Owner")]
         public async Task<IActionResult> AddOwnerEstablishment(OwnerEstablishmentModel model)
         {
-            model = await service.InsertAsync(model);
-            if (model == null)
-                return BadRequest("Error inserting model");
-            return CreatedAtAction(nameof(OwnerEstablishmentModel), model);
+            ServiceCrudResponse<OwnerEstablishmentModel> resp = await service.InsertAsync(model);
+            if (!resp.Success || resp.Model == null)
+                return BadRequest(resp.Message);
+            return Ok(resp.Model);
         }
-
     }
 }
