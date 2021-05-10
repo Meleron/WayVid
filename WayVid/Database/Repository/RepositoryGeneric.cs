@@ -11,8 +11,8 @@ namespace WayVid.Database.Repository
     public class RepositoryGeneric<TEntity, TContext> : IRepositoryGeneric<TEntity, TContext> where TEntity : class where TContext : DbContext
     {
 
-        private DbSet<TEntity> entitySet;
-        private TContext context;
+        private DbSet<TEntity> entitySet { get; set; }
+        private TContext context { get; set; }
 
         public RepositoryGeneric(TContext context)
         {
@@ -41,8 +41,15 @@ namespace WayVid.Database.Repository
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             SetUpdateInfo(entity);
-            context.Entry(entity).State = EntityState.Modified;
-            await context.SaveChangesAsync();
+            var q = context.Entry(entity);
+            q.State = EntityState.Modified;
+            try
+            {
+                await context.SaveChangesAsync();
+            } catch(Exception ex)
+            {
+                return null;
+            }
             return entity;
         }
 
@@ -73,5 +80,11 @@ namespace WayVid.Database.Repository
                 updateInfo.UpdatedOn = DateTimeOffset.Now;
             }
         }
+
+        public DbSet<TEntity> GetEntitySet()
+        {
+            return entitySet;
+        }
+
     }
 }

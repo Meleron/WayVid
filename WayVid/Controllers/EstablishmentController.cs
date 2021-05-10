@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using WayVid.Infrastructure.Extras;
 using WayVid.Infrastructure.Interfaces.Service;
 using WayVid.Infrastructure.Model;
 
@@ -29,10 +30,10 @@ namespace WayVid.Controllers
         [Authorize(Roles = "Owner")]
         public async Task<IActionResult> GetModel(Guid ID)
         {
-            EstablishmentModel model = await establishmentService.GetAsync(ID, true);
-            if (model != null)
-                return Ok(model);
-            return BadRequest("Establishment not found");
+            ServiceCrudResponse<EstablishmentModel> resp = await establishmentService.GetAsync(ID, true);
+            if (resp.Success && resp.Model != null)
+                return Ok(resp.Model);
+            return BadRequest(resp.Message);
         }
 
         [HttpPost]
@@ -46,5 +47,17 @@ namespace WayVid.Controllers
             //    return CreatedAtAction(nameof(EstablishmentModel), model);
             //return BadRequest("Error inserting model");
         }
+
+        
+        [HttpGet("GetTopEstablishment")]
+        [Authorize(Roles = "Owner")]
+        public async Task<IActionResult> GetTopEstablishment()
+        {
+            ServiceCrudResponse<EstablishmentModel> resp = await establishmentService.GetTopEstablishment();
+            if (!resp.Success || resp.Model == null)
+                return BadRequest(resp.Message);
+            return Ok(resp.Model);
+        }
+
     }
 }

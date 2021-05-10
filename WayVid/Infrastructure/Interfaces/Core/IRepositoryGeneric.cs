@@ -9,6 +9,7 @@ namespace WayVid.Infrastructure.Interfaces.Core
 {
     public interface IRepositoryGeneric <TEntity, TContext> where TEntity: class where TContext: DbContext
     {
+        public DbSet<TEntity> GetEntitySet();
         public Task<TEntity> GetAsync(Guid ID);
         public Task<TEntity> InsertAsync(TEntity entity);
         public Task<TEntity> UpdateAsync(TEntity entity);

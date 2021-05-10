@@ -1,55 +1,60 @@
-﻿using AutoMapper;
+﻿using AspNet.Security.OpenIdConnect.Primitives;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WayVid.Database;
 using WayVid.Database.Entity;
+using WayVid.Infrastructure.Extras;
 using WayVid.Infrastructure.Interfaces.Core;
 using WayVid.Infrastructure.Interfaces.Service;
 using WayVid.Infrastructure.Model;
 
 namespace WayVid.Service
 {
-    public class EstablishmentService : IEstablishmentService
+    public class EstablishmentService : CrudGenericService<Establishment, EstablishmentModel, ApiDbContext>, IEstablishmentService
     {
 
-        IRepositoryGeneric<Establishment, ApiDbContext> establishmentRepository;
-        IMapper mapper;
+        private readonly IRepositoryGeneric<Establishment, ApiDbContext> repository;
+        private readonly IOwnerEstablishmentService ownerEstablishmentService;
+        private readonly IHttpContextAccessor contextAccessor;
+        private readonly IUserService userService;
+        private readonly IMapper mapper;
 
-        public EstablishmentService(IRepositoryGeneric<Establishment, ApiDbContext> establishmentRepository, IMapper mapper)
+        public EstablishmentService(IRepositoryGeneric<Establishment, ApiDbContext> repository,
+            IMapper mapper,
+            IHttpContextAccessor contextAccessor,
+            IUserService userService,
+            IOwnerEstablishmentService ownerEstablishmentService) : base(repository, mapper)
         {
-            this.establishmentRepository = establishmentRepository;
+            this.repository = repository;
             this.mapper = mapper;
-        }
-
-        public async Task<EstablishmentModel> GetAsync(Guid ID, bool includeDependecies = false)
-        {
-            Establishment entity = await establishmentRepository.GetAsync(ID);
-            return mapper.Map<Establishment, EstablishmentModel>(entity);
-        }
-
-        public async Task<EstablishmentModel> InsertAsync(EstablishmentModel model)
-        {
-            Establishment entity = mapper.Map<EstablishmentModel, Establishment>(model);
-            entity = await establishmentRepository.InsertAsync(entity);
-            return mapper.Map<Establishment, EstablishmentModel>(entity);
+            this.contextAccessor = contextAccessor;
+            this.userService = userService;
+            this.ownerEstablishmentService = ownerEstablishmentService;
         }
 
         public async Task<bool> CheckIfEsistsAsync(Guid ID)
         {
-            return (await establishmentRepository.GetAsync(ID)) != null;
+            return (await repository.GetAsync(ID)) != null;
         }
 
-        public async Task<EstablishmentModel> UpdateAsync(EstablishmentModel model)
+        public async Task<ServiceCrudResponse<EstablishmentModel>> GetTopEstablishment()
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task DeleteAsync(EstablishmentModel model)
-        {
-            throw new NotImplementedException();
+            //Claim subjectClaim = contextAccessor.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == OpenIdConnectConstants.Claims.Subject);
+            ServiceCrudResponse<UserModel> resp = await userService.GetUserModelByPrincipalAsync(contextAccessor.HttpContext.User);
+            if (!resp.Success || resp.Model == null)
+                return ErrorResponse("User not found");
+            if (resp.Model.OwnerID == null)
+                return ErrorResponse("User has no owner");
+            ServiceCrudResponse<OwnerEstablishmentModel> ownerEstModel= await ownerEstablishmentService.GetTopOwnerEstablishmentForOwner(resp.Model.OwnerID.Value);
+            if (!ownerEstModel.Success || ownerEstModel.Model == null)
+                return ErrorResponse("Error receiving owner");
+            return SuccessResponse(ownerEstModel.Model.Establishment);
         }
     }
 }
