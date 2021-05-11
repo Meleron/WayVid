@@ -27,6 +27,7 @@ using WayVid.Database.Repository;
 using OpenIddict.Server.AspNetCore;
 using OpenIddict.Validation.AspNetCore;
 using AspNet.Security.OpenIdConnect.Primitives;
+using WayVid.Infrastructure.Interfaces.Repository;
 
 namespace WayVid
 {
@@ -154,9 +155,9 @@ namespace WayVid
             services.AddTransient<IOwnerEstablishmentService, OwnerEstablishmentService>();
             services.AddTransient<IRepositoryGeneric<User, ApiDbContext>, UserRepository>();
             services.AddTransient<IRepositoryGeneric<Owner, ApiDbContext>, OwnerRepository>();
-            services.AddTransient<IRepositoryGeneric<Visitor, ApiDbContext>, VisitorRepository>();
+            services.AddTransient<IVisitorRepository, VisitorRepository>();
             services.AddTransient<IRepositoryGeneric<Establishment, ApiDbContext>, EstablishmentRepository>();
-            //services.AddTransient<IRepositoryGeneric<VisitLogItem, ApiDbContext>, VisitLogItemRepository>();
+            services.AddTransient<IVisitLogItemRepository, VisitLogItemRepository>();
             services.AddTransient<IRepositoryGeneric<OwnerEstablishment, ApiDbContext>, RepositoryGeneric<OwnerEstablishment, ApiDbContext>>();
             services.Configure<IdentityOptions>(options =>
             {

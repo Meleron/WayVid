@@ -21,5 +21,6 @@ namespace WayVid.Infrastructure.Model
         public string DeletedBy { get; set; }
         public Guid UserID { get; set; }
         public UserModel User { get; set; }
+        public List<VisitLogItem> VisitLogItemList { get; set; }
     }
 }

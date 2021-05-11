@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WayVid.Database.Entity;
 using WayVid.Infrastructure.Enum;
-using WayVid.Infrastructure.Interfaces.Core;
 using WayVid.Infrastructure.Interfaces.Entity;
 
-namespace WayVid.Infrastructure.Model
+namespace WayVid.Database.Entity
 {
-    public class VisitLogItemModel : IVisitLogItem, IModel
+    public class VisitLogItem : IVisitLogItem
     {
         public Guid ID { get; set; }
         public VisitLogItemStatus Status { get; set; }

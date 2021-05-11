@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WayVid.Infrastructure.Interfaces.Core;
@@ -12,7 +13,7 @@ namespace WayVid.Database.Repository
     {
 
         private DbSet<TEntity> entitySet { get; set; }
-        private TContext context { get; set; }
+        protected TContext context { get; set; }
 
         public RepositoryGeneric(TContext context)
         {
@@ -41,15 +42,8 @@ namespace WayVid.Database.Repository
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             SetUpdateInfo(entity);
-            var q = context.Entry(entity);
-            q.State = EntityState.Modified;
-            try
-            {
-                await context.SaveChangesAsync();
-            } catch(Exception ex)
-            {
-                return null;
-            }
+            context.Entry(entity).State = EntityState.Modified;
+            await context.SaveChangesAsync();
             return entity;
         }
 

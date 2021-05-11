@@ -19,6 +19,7 @@ namespace WayVid.Infrastructure.Model
         public string DeletedBy { get; set; }
         public bool IsActive { get; set; }
         public List<OwnerEstablishmentModel> OwnerEstablishmentList { get; set; }
+        public List<VisitLogItemModel> VisitLogItemList { get; set; }
         public string EstablishmentName { get; set; }
         public string MenuUrl { get; set; }
     }

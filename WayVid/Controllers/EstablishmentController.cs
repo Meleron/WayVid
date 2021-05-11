@@ -54,9 +54,29 @@ namespace WayVid.Controllers
         public async Task<IActionResult> GetTopEstablishment()
         {
             ServiceCrudResponse<EstablishmentModel> resp = await establishmentService.GetTopEstablishment();
-            if (!resp.Success || resp.Model == null)
+            if (!resp.Success)
                 return BadRequest(resp.Message);
             return Ok(resp.Model);
+        }
+
+        [HttpPost("checkIn")]
+        [Authorize(Roles = "Owner")]
+        public async Task<IActionResult> CheckIn([FromQuery] Guid establishmentID)
+        {
+            ServiceCrudResponse resp = await establishmentService.CheckInAsync(establishmentID);
+            if (resp.Success)
+                return Ok(resp.Message);
+            return BadRequest(resp.Message);
+        }
+
+        [HttpPost("checkOut")]
+        [Authorize(Roles = "Owner")]
+        public async Task<IActionResult> CheckOut([FromQuery] Guid establishmentID)
+        {
+            ServiceCrudResponse resp = await establishmentService.CheckOutAsync(establishmentID);
+            if (resp.Success)
+                return Ok(resp.Message);
+            return BadRequest(resp.Message);
         }
 
     }

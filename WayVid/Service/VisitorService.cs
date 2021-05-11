@@ -8,6 +8,7 @@ using WayVid.Database;
 using WayVid.Database.Entity;
 using WayVid.Infrastructure.Extras;
 using WayVid.Infrastructure.Interfaces.Core;
+using WayVid.Infrastructure.Interfaces.Repository;
 using WayVid.Infrastructure.Interfaces.Service;
 using WayVid.Infrastructure.Model;
 
@@ -16,10 +17,10 @@ namespace WayVid.Service
     public class VisitorService : CrudGenericService<Visitor, VisitorModel, ApiDbContext>, IVisitorService
     {
 
-        private readonly IRepositoryGeneric<Visitor, ApiDbContext> repository;
+        private readonly IVisitorRepository repository;
         private readonly IMapper mapper;
 
-        public VisitorService(IRepositoryGeneric<Visitor, ApiDbContext> repository,
+        public VisitorService(IVisitorRepository repository,
             IMapper mapper)
             : base(repository, mapper)
         {

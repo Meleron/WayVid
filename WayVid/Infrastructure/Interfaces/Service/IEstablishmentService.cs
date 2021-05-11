@@ -15,5 +15,7 @@ namespace WayVid.Infrastructure.Interfaces.Service
     {
         public Task<bool> CheckIfEsistsAsync(Guid ID);
         public Task<ServiceCrudResponse<EstablishmentModel>> GetTopEstablishment();
+        public Task<ServiceCrudResponse> CheckInAsync(Guid establishmentID);
+        public Task<ServiceCrudResponse> CheckOutAsync(Guid establishmentID);
     }
 }
