@@ -19,6 +19,7 @@ namespace WayVid.Database.Entity
         public string DeletedBy { get; set; }
         public bool IsActive { get; set; }
         public List<OwnerEstablishment> OwnerEstablishmentList { get; set; }
+        public List<VisitLogItem> VisitLogItemList { get; set; }
         public string EstablishmentName { get; set; }
         public string MenuUrl { get; set; }
     }

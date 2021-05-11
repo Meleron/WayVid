@@ -55,7 +55,10 @@ namespace WayVid.Service
             Claim subjectClaim = principal.Claims.FirstOrDefault(claim => claim.Type == OpenIdConnectConstants.Claims.Subject);
             if (subjectClaim == null || subjectClaim.Value == "")
                 return null;
-            User user = await repository.GetAsync(Guid.Parse(subjectClaim.Value));
+            //User user = await repository.GetAsync(Guid.Parse(subjectClaim.Value));
+            User user = await userManager.GetUserAsync(principal);
+            if(user == null)
+                return new ServiceCrudResponse<User>(null, false, "User not found");
             return new ServiceCrudResponse<User>(user, true, "");
         }
 

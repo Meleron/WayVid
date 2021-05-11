@@ -17,6 +17,7 @@ namespace WayVid.Database
         public DbSet<User> UserList { get; set; }
         public DbSet<Visitor> VisitorList { get; set; }
         public DbSet<Owner> OwnerList { get; set; }
+        public DbSet<VisitLogItem> VisitLogItemList { get; set; }
         public DbSet<Establishment> EstablishmentList { get; set; }
         public DbSet<OwnerEstablishment> OwnerEstablishmentList { get; set; }
 
@@ -42,6 +43,7 @@ namespace WayVid.Database
             visitor.ToTable("Visitor");
             visitor.HasKey(e => e.ID);
             visitor.HasOne(e => e.User).WithOne(d => d.Visitor).HasForeignKey<User>(d => d.VisitorID);
+            visitor.HasMany(e => e.VisitLogItemList).WithOne(d => d.Visitor).HasForeignKey(e => e.VisitorID);
 
             EntityTypeBuilder<Owner> owner = builder.Entity<Owner>();
             owner.ToTable("Owner");
@@ -53,12 +55,19 @@ namespace WayVid.Database
             establishment.ToTable("Establishment");
             establishment.HasKey(e => e.ID);
             establishment.HasMany(e => e.OwnerEstablishmentList).WithOne(d => d.Establishment).HasForeignKey(d => d.EstablishmentID);
+            establishment.HasMany(e => e.VisitLogItemList).WithOne(d => d.Establishment).HasForeignKey(d => d.EstablishmentID);
 
             EntityTypeBuilder<OwnerEstablishment> ownerEstablishment = builder.Entity<OwnerEstablishment>();
             ownerEstablishment.ToTable("OwnerEstablishment");
             ownerEstablishment.HasKey(e => e.ID);
             ownerEstablishment.HasOne(e => e.Establishment).WithMany(d => d.OwnerEstablishmentList).HasForeignKey(e => e.EstablishmentID);
             ownerEstablishment.HasOne(e => e.Owner).WithMany(d => d.OwnerEstablishmentList).HasForeignKey(e => e.OwnerID);
+
+            EntityTypeBuilder<VisitLogItem> visitLogItem = builder.Entity<VisitLogItem>();
+            visitLogItem.ToTable("VisitLogItem");
+            visitLogItem.HasKey(e => e.ID);
+            visitLogItem.HasOne(e => e.Visitor).WithMany(d => d.VisitLogItemList).HasForeignKey(e => e.VisitorID);
+            visitLogItem.HasOne(e => e.Establishment).WithMany(d => d.VisitLogItemList).HasForeignKey(e => e.EstablishmentID);
 
             base.OnModelCreating(builder);
         }

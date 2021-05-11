@@ -20,5 +20,6 @@ namespace WayVid.Database.Entity
         public string UpdatedBy { get; set; }
         public Guid UserID { get; set; }
         public User User { get; set; }
+        public List<VisitLogItem> VisitLogItemList { get; set; }
     }
 }

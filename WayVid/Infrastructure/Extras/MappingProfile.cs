@@ -24,6 +24,8 @@ namespace WayVid.Infrastructure.Extras
             CreateMap<OwnerModel, Owner>();
             CreateMap<OwnerEstablishment, OwnerEstablishmentModel>();
             CreateMap<OwnerEstablishmentModel, OwnerEstablishment>();
+            CreateMap<VisitLogItem, VisitLogItemModel>();
+            CreateMap<VisitLogItemModel, VisitLogItem>();
         }
     }
 }
